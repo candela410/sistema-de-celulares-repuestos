@@ -1,72 +1,94 @@
 import sqlite3
+from datetime import datetime
 
 def conectar():
-    return sqlite3.connect("tecnojuan.db")
+    return sqlite3.connect(r"C:\Users\cande\OneDrive\Documentos\tablas1.bd")
 
-def crear_tablas():
-    conn = conectar()
-    cursor = conn.cursor()
 
+def tabla_proveedores():
+    conexion=conectar()
+    cursor= conexion.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Proveedores (
-        id_prov INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        direccion TEXT,
-        telefono TEXT,
-        estado TEXT
-    );
-    """)
+    create table if not exists Proveedores(
+        id_proveedor integer primary key AUTOINCREMENT,
+        nombre varchar(100) not null,
+        telefono integer,
+        direccion varchar(100),
+        estado varchar(10)
+    )""")
 
+    conexion.commit()
+    conexion.close()
+
+def tabla_categorias():
+    conexion=conectar()
+    cursor= conexion.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Categorias (
-        id_categoria INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL
-    );
-    """)
+    create table if not exists Categoria(
+        id_categoria integer primary key autoincrement,
+        nombre varchar(100) not null
+    )""")
+    
+    conexion.commit()
+    conexion.close()
 
+def tabla_marcas():
+    conexion=conectar()
+    cursor=conexion.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Marcas (
-        id_marca INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL
-    );
-    """)
+    create table if not exists Marcas(
+        id_marca integer primary key autoincrement, 
+        nombre varchar(100)
+    )""")
 
+    conexion.commit()
+    conexion.close()
+
+def tabla_repuestos():
+    conexion=conectar()
+    cursor=conexion.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Repuestos (
-        id_rep INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
-        id_categoria INTEGER,
-        id_marca INTEGER,
-        stock INTEGER,
-        precio_unitario REAL,
-        FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria),
-        FOREIGN KEY (id_marca) REFERENCES Marcas(id_marca)
-    );
-    """)
+    create table if not exists Repuestos(
+        id_repuesto integer primary key autoincrement,
+        nombre varchar(100) not null,
+        id_marca integer,
+        foreign key (Id_marca) references marcas(Id_marca),
+        stock integer,
+        precio_unitario integer
+    )""")   
 
+    conexion.commit()
+    conexion.close()
+
+
+
+def tabla_pedidos():
+    conexion=conectar()
+    cursor=conexion.cursor
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Pedidos (
-        id_pedido INTEGER PRIMARY KEY AUTOINCREMENT,
-        fecha_pedido TEXT,
-        fecha_entrega TEXT,
-        total REAL,
-        id_prov INTEGER,
-        FOREIGN KEY (id_prov) REFERENCES Proveedores(id_prov)
-    );
-    """)
-
+    create table if not exists Pedidos(
+        id_pedido integer primary key autoincrement,
+        fecha_pedido datetime,
+        fecha_entrega varchar (50),
+        total integer not null
+    )""")
+    fecha_pedido =datetime.now()
+    conexion.commit()
+    conexion.close()
+    
+def tabla_detalle_pedidos():
+    conexion=conectar()
+    cursor=conexion.cursor()
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Detalle_Pedido (
-        id_detalle INTEGER PRIMARY KEY AUTOINCREMENT,
-        id_pedido INTEGER,
-        id_rep INTEGER,
-        cantidad INTEGER,
-        precio_total REAL,
-        FOREIGN KEY (id_pedido) REFERENCES Pedidos(id_pedido),
-        FOREIGN KEY (id_rep) REFERENCES Repuestos(id_rep)
-    );
-    """)
+    create table if not exists Detalle_pedidos(
+        id_pedidos integer,
+        id_repuestos integer,
+        primary key (Id_pedidos,Id_repuestos),
+        foreign key (Id_pedidos) references pedidos (Id_pedidos),
+        foreign key (Id_repuestos) references repuestos (Id_repuestos),
+        cantidad integer not null,
+        precio_total integer not null
+    )""")
 
-    conn.commit()
-    conn.close()
-    print("Base y tablas creadas correctamente.")
+    conexion.commit()
+    conexion.close()
