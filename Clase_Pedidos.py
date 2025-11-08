@@ -1,22 +1,102 @@
 from BD import tabla_pedidos
-from Clase_Detalle import tabla_detalle_pedidos
+from Clase_Detalle import Detalle_pedido
 from Clase_Proveedores import Proveedor 
 from BD import conectar
+from datetime import datetime
+from BD import linea
 
 
 class Pedido():
-    def __init__(self, Id_pedidos,fecha_pedido, fecha_entrega, total,proveedor1):
-        self.Id_pedido=Id_pedidos
+    def __init__(self, id_pedidos=None,fecha_pedido=None, fecha_entrega=None, total=0,id_proveedor=None):
+        self.id_pedido=id_pedidos
         self.fecha_pedido=fecha_pedido
         self.fecha_entrega=fecha_entrega
         self.total=total
-        self.proveedor1=Proveedor(proveedor1)
+        self.proveedor1=Proveedor(id_proveedor)
         tabla_pedidos()
 
     def agregar_pedido(self):
-        conexion=conectar()
-        cursor=conexion.cursor()
-        fecha=input("Ingresar la fecha del pedido")
-        fecha_entrega=input("Ingresar la fecha de entrega del pedido")
+        linea()
+        print("--REALIZAR PEDIDO--")
+        linea()
+           
+        while True:
+            
+            try:
+                conexion=conectar()
+                cursor=conexion.cursor()
+                cursor.execute("""select id, nombre from proveedores where estado="Activo" """)
+                proveedores=(cursor.fetchall())
+                if not proveedores:
+                    print()
+                    print("No hay proveedores registrados")
+                    print()
+                else:
+                    print("--PROVEEDORES DISPONIBLES--")
+                    for id, nombre in proveedores:
+                        print(f"ID: {id} - Nombre: {nombre}")
+                    id_prov=int(input("Ingrese el Id del proveedor: "))
+                    fecha_pedido=datetime.now().stryftime("%Y-%m-%d")
+                    cursor.execute("""insert into Pedidos(fecha_pedido,fecha_entrega, total, id_proveedor,estado )
+                                values (?,null,0,?,"Pendiente")""",(fecha_pedido,id_prov))
+                    id_pedido=cursor.lastrowid
+                    conexion.commit()
+                    cursor.execute(""" select id_producto, nombre from Repuestos where id_proveedor=?""",(id_prov,))
+                    repuestos=cursor.fetchall()
+                    print("Repuesto del proveedor ")
+                    for id, nombre in repuestos:
+                        print (f"ID: {id} - Nombre: {nombre}")
+                    det=Detalle_pedido()
+                    det.agregar_detalle(id_pedido)
+                    print()
+                    print("Pedido realizado correctamente")
+            except Exception as e:
+                print("Error al realizar el pedido", e)
+            finally:
+                conexion.close()
+            continuar=int(input("Si desea agregar otro pedido ingrese 1 sino 0 "))
+            linea()
+            if continuar != 1:
+                break
+            
         
+
+    
+    def listar_pedidos(self):
+        linea()
+        print("----LISTA DE PEDIDOS----")
+        linea()
+        try:
+            conexion = conectar()
+            cursor = conexion.cursor()
+            cursor.execute("SELECT * FROM Pedidos")
+            pedidos = list(cursor.fetchall())
+
+            if not pedidos:
+                print()
+                print("No hay pedidos registrados.")
+                print()
+            else:
+                for p in pedidos:
+                    print()
+                    print(f"ID: {p[0]} | Fecha Pedido: {p[1]} | Fecha Entrega: {p[2]} | Total: ${p[3]} | ID Proveedor: {p[4]}")
+                    linea()
+                    det=Detalle_pedido()
+                    det.listar_detalles(p[0])
+
+        except Exception as e:
+            linea()
+            print("Error al listar los pedidos:", e)
+            linea()
+        finally:
+            conexion.close()
+
+    
+
+        
+
+
+    
+
+
 

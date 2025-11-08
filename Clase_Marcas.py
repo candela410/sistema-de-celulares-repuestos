@@ -1,38 +1,105 @@
 from BD import tabla_marcas
 from BD import conectar
-
+from BD import linea
 class Marca():  
-    def __init__(self,Id_marca, nombre):
-        self.__Id_marca=Id_marca
+    def __init__(self,id_marca=None, nombre=""):
+        self.__id_marca=id_marca
         self.nombre=nombre
         tabla_marcas()
+    
+    @property
+    def marca (self):
+        return self.__id_marca
+    
+    @marca.setter
+    def marca(self, nueva_marca):
+        self.__id_marca=nueva_marca
+
 
     def agregar_marca(self):
-        conexion=conectar()
-        cursor=conexion.cursor()
-        nombre=input("Ingresar el nombre de la nueva marca")
-        cursor.execute("""inser into marcas(nombre) values (?)""", nombre)
-        conexion.commit()
-        conexion.close()
-        print("La nueva fue agregada correctamente ")
+        while True:
+            nombre=input("Ingresar el nombre de la nueva marca:  ")
+            try:
+                conexion=conectar()
+                cursor=conexion.cursor()
+                cursor.execute("""inser into marcas(nombre) values (?)""", (nombre,))
+                conexion.commit()
+                print()
+                print("La nueva marca fué agregada correctamente")
+            except Exception as e:
+                print("Error al agregar la marca",e)
+            finally:
+                conexion.close()
+            linea()
+            continuar=int(input("Si desea agregar otra marca ingrese 1 sino 0 "))
+            linea()
+            if continuar != 1:
+                break
+        
 
     def eliminar_marca(self):
-        conexion=conectar()
-        cursor=conexion.cursor()
-        id=input("Ingresar el ID de la marca que desea eliminar")
-        cursor.execute("""delete from categorias where id_categoria= ?""", id)
-        conexion.commit()
-        conexion.close()
-        print("La marca se eliminó correctamente")
+        while True:
+            id=int(input("Ingresar el ID de la marca que desea eliminar:  "))
+            try:
+                conexion=conectar()
+                cursor=conexion.cursor()
+                cursor.execute("""delete from categorias where id_categoria= ?""", (id,))
+                conexion.commit()
+                print()
+                print("La marca se eliminó correctamente")
+            except Exception as e:
+                print ("Error al eliminar la marca", e)
+            finally:
+                conexion.close()
+            continuar=int(input("Si desea eliminar otra marca ingrese 1 sino 0 "))
+            linea()
+            if continuar != 1:
+                break
+        
+        
     
     def modificar_marca(self):
-        conexion=conectar()
-        cursor=conexion.cursor()
-        id=input("Ingresar el ID de a marca que desea modificar.")
-        nombre=input("Ingresar su nuevo nombre")
-        cursor.execute(""" update marcas set nombre= ? where id_marca= ?""", nombre, id)
-        conexion.commit()
-        conexion.close()
-        print("Se modificó correctamente. ")
+        while True:
+            id=input("Ingresar el ID de a marca que desea modificar.")
+            nombre=input("Ingresar su nuevo nombre")
+            try:
+                conexion=conectar()
+                cursor=conexion.cursor()
+                cursor.execute(""" update marcas set nombre= ? where id_marca= ?""",(nombre, id))
+                conexion.commit()
+                print("Se modificó correctamente")
+            except Exception as e:
+                print("Error al modificar la marca",e)
+            finally:
+                conexion.close()
+            linea()
+            continuar=int(input("Si desea modificar otra marcaingrese 1 sino 0 "))
+            linea()
+            if continuar != 1:
+                break
 
+        
+      
+    def listar_marca(self):
+        linea()
+        print("--LISTA DE MARCAS--")
+        linea()
+        try:
+            conexion=conectar()
+            cursor=conexion.cursor()
+            cursor.execute("""select * from marcas""")
+            marcas=list(cursor.fetchall())
+            if not marcas:
+                print()
+                print("No hay marcas registradas")
+                print()
+            else:
+                for id_marca, nombre in marcas:
+                    print()
+                    print(f"ID: {id_marca} - Nombre:{nombre}")
+                    print()
+        except Exception as e:
+            print("Error al listas las marcas",e)
+        finally:
+            conexion.close()
     
