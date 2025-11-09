@@ -1,5 +1,4 @@
 
-
 from BD import tabla_repuestos
 from BD import conectar
 from BD import linea
@@ -23,32 +22,32 @@ class Repuesto():
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                nombre=input("Ingrese el nombre del nuevo repuesto:  ").strip()
-                if " " in nombre or nombre=="":
-                    print("Nombre invalido")
-                else:
-                    print("Nombre válido")
+                nombre=input("Ingrese el nombre del nuevo repuesto:  ")
                 b=True
                 while b==True:
                     stock=int(input("Ingresar su stock:  "))
                     if stock >= 0:
                         b=False
                 precio_unitario=float(input("Ingresar el precio unitario:   "))
-                marca=input("Ingresar el nombre de la marca:  ").strip()
-                cursor.execute("""select id_marca from Marcas where nombre= ?""", (marca,))
+                marca=input("Ingresar el nombre de la marca:  ")
+                cursor.execute("select id_marca from Marcas where nombre= ?", (marca,))
                 marca1=cursor.fetchone()
+                id_marca=marca1[0]
                 if not marca1:
                     linea()
                     print("La marca no se encuentra registrada")
                     linea()
+                    break
                 categoria=input("Ingresar el ID de la categoria: ").strip()
-                cursor.execute("""select id_categoria from Categorias where nombre= ?""",(categoria,))
+                cursor.execute("select id_categoria from Categorias where nombre= ?",(categoria,))
                 categoria1=cursor.fetchone()
+                id_categoria=categoria1[0]
                 if not categoria1:
                     linea()
                     print("La categoria no se encuentra registrada")
                     linea()
-                cursor.execute(""" insert into repuestos ( nombre, stock,precio_unitario,id_marca,id_categoria) values (?,?,?,?,?)""", (nombre, stock, precio_unitario, marca1, categoria1))
+                    break
+                cursor.execute(""" insert into repuestos ( nombre, stock,precio_unitario,id_marca,id_categoria) values (?,?,?,?,?)""", (nombre, stock, precio_unitario, id_marca, id_categoria))
                 conexion.commit()
                 id_repuesto=cursor.lastrowid
                 linea()
@@ -143,8 +142,12 @@ class Repuesto():
                 linea()
             else:
                 for id_repuesto, nombre, stock, precio_unitario, marca, categoria in repuestos:
+                    cursor.execute ("select nombre from Marcas where id_marca= ?",(marca,))
+                    marca1=cursor.fetchone()
+                    cursor.execute("select nombre from Categorias where id_categoria= ?", (categoria,))
+                    categoria1=cursor.fetchone()
                     print()
-                    print (f"Id: {id_repuesto} - Nombre: {nombre} - Stock: {stock} - Precio Unitario: {precio_unitario} - Marca:{marca} - Categoria:{categoria}")
+                    print (f"Id: {id_repuesto} - Nombre: {nombre} - Stock: {stock} - Precio Unitario: {precio_unitario} - Marca:{marca1} - Categoria:{categoria1}")
                     linea()
         except Exception as e:
             print("Error al mostrar la lista de Respuestos",e)

@@ -2,7 +2,7 @@ from BD import tabla_proveedores
 from BD import conectar
 from BD import linea
 class Proveedor():
-    def __init__(self, id_proveedor=None,nombre="",telefono=None, direccion="", estado="Activo"):
+    def __init__(self, id_proveedor=None,nombre="",telefono=None, direccion="", estado=""):
         self.Id_proveedor=id_proveedor
         self.nombre=nombre
         self.telefono=telefono
@@ -75,7 +75,7 @@ class Proveedor():
         try:
             conexion=conectar()
             cursor=conexion.cursor()
-            cursor.execute(f"""update proveedores set {nombre_columna}= ? where Id_proveedor= ?""",(dato,proveedor))
+            cursor.execute(f"""update Proveedores set {nombre_columna}= ? where Id_proveedor= ?""",(dato,proveedor))
             conexion.commit()
             print()
             print(f"El atributo{nombre_columna} fue modificado ")
@@ -92,7 +92,11 @@ class Proveedor():
         print("----MODIFICAR PROVEEDOR----")
         linea()
         while True:
-            proveedor=int(input("Ingrese el Id del proveedor el cual desea modificar: "))
+            conexion=conectar()
+            cursor=conexion.cursor()
+            proveedor=input("Ingrese el nombre del proveedor el cual desea modificar: ")
+            cursor.execute("select id_proveedor from Proveedores where id_proveedor=? ",(proveedor,) )
+            proveedor1=cursor.fetchone()
             print ("--ATRIBUTOS PARA MODIFICAR--")
             print ("1- Nombre")
             print ("2- Telefono")
@@ -103,7 +107,7 @@ class Proveedor():
             columnas={"1":"Nombre", "2":"Telefono","3":"Direccion","4":"Estado"}
             if opcion in columnas:
                 nombre_columna=columnas[opcion]
-                self.ejecucion_modificacion_prov(nombre_columna, dato, proveedor)
+                self.ejecucion_modificacion_prov(nombre_columna, dato, proveedor1)
             else: 
                 print("Opcion invalida")
             print()
@@ -139,3 +143,8 @@ class Proveedor():
         finally:
             conexion.close()
         linea()
+    
+
+            
+
+    

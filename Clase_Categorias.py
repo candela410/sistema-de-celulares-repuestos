@@ -3,7 +3,7 @@ from BD import conectar
 from BD import linea
 
 class Categoria():
-    def __init__(self,id_categoria,nombre):
+    def __init__(self,id_categoria=None,nombre=""):
         self.__id_categoria=id_categoria
         self.nombre=nombre
         tabla_categorias()
@@ -18,8 +18,9 @@ class Categoria():
 
     def agregar_categoria(self):
         print("----AGREGAR CATEGORIA----")
+        linea()
         while True:
-            nombre=input("Ingrese el nombre de la categoria que desea agregar")
+            nombre=input("Ingrese el nombre de la categoria que desea agregar:  ")
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()

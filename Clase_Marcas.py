@@ -22,7 +22,7 @@ class Marca():
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                cursor.execute("""inser into marcas(nombre) values (?)""", (nombre,))
+                cursor.execute("""insert into marcas(nombre) values (?)""", (nombre,))
                 conexion.commit()
                 print()
                 print("La nueva marca fué agregada correctamente")
@@ -60,8 +60,8 @@ class Marca():
     
     def modificar_marca(self):
         while True:
-            id=input("Ingresar el ID de a marca que desea modificar.")
-            nombre=input("Ingresar su nuevo nombre")
+            id=input("Ingresar el ID de a marca que desea modificar:  ")
+            nombre=input("Ingresar su nuevo nombre:  ")
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
@@ -102,4 +102,3 @@ class Marca():
             print("Error al listas las marcas",e)
         finally:
             conexion.close()
-    

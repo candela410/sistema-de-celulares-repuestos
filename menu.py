@@ -3,10 +3,19 @@ from Clase_Categorias import Categoria
 from Clase_Marcas import Marca
 from Clase_Repuestos import Repuesto
 from Clase_Pedidos import Pedido
-from Clase_Detalle import Detalle_pedido
 from BD import linea
+import pandas as pd
+import matplotlib.pyplot as plt
+import platform
+import os
+from estadisticas_tp import  Estadisticas
 
+def limpiar_pantalla(self):
+    os.system('cls' if platform.system() == 'Windows' else 'clear')
 
+def pausa(self):
+    input("\nPresioná Enter para volver al menú...")
+    self.limpiar_pantalla()     
 
 def menu_principal():
     while True:
@@ -16,6 +25,7 @@ def menu_principal():
         print ("1- Repuestos")
         print ("2- Proveedores")
         print ("3- Estadisticas")
+        print ("4- Backup y Restauración")
         print ("4- Salir")
         print()
         opcion=int(input("Elegir una opcion:  "))
@@ -34,6 +44,7 @@ def menu_principal():
                         break
                     else:
                         print("Opcion invalida")
+
 
 
 
