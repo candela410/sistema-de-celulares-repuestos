@@ -1,7 +1,6 @@
-
-from BD import tabla_repuestos
 from BD import conectar
 from BD import linea
+from BD import tablas
 
 
 class Repuesto():
@@ -12,24 +11,27 @@ class Repuesto():
         self.precio_unitario=precio_unitario
         self.marca=id_marca
         self.categoria=id_categoria
-        tabla_repuestos()
+        tablas()
+       
     
     def agregar_repuestos(self):
-        linea()
-        print ("----AGREGAR REPUESTO----")
-        linea()
         while True:
+            linea()
+            print ("----AGREGAR REPUESTO----")
+            linea()
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                nombre=input("Ingrese el nombre del nuevo repuesto:  ")
+                nombre=input("Ingrese el nombre del nuevo repuesto:  ").strip().lower()
                 b=True
                 while b==True:
                     stock=int(input("Ingresar su stock:  "))
                     if stock >= 0:
                         b=False
+                    else: 
+                        print("Stock incorrecto....")
                 precio_unitario=float(input("Ingresar el precio unitario:   "))
-                marca=input("Ingresar el nombre de la marca:  ")
+                marca=input("Ingresar el nombre de la marca:  ").strip().lower()
                 cursor.execute("select id_marca from Marcas where nombre= ?", (marca,))
                 marca1=cursor.fetchone()
                 id_marca=marca1[0]
@@ -38,7 +40,7 @@ class Repuesto():
                     print("La marca no se encuentra registrada")
                     linea()
                     break
-                categoria=input("Ingresar el ID de la categoria: ").strip()
+                categoria=input("Ingresar el nombre de la categoria: ").strip().lower()
                 cursor.execute("select id_categoria from Categorias where nombre= ?",(categoria,))
                 categoria1=cursor.fetchone()
                 id_categoria=categoria1[0]
@@ -67,12 +69,14 @@ class Repuesto():
         
 
     def eliminar_repuestos(self):
-        linea()
-        print("----ELIMINAR REPUESTO----")
-        linea()
         while True:
-            id=int(input("Ingresar el ID del repuesto que desea eliminar: "))
+            linea()
+            print("----ELIMINAR REPUESTO----")
+            linea()
             try:
+                nombre=input("Ingresar el nombre del repuesto que desea eliminar:  ").strip().lower()
+                cursor.execute("select id_repuesto from Repuestos where nombre= ?",(nombre,))
+                id=cursor.fetchone()
                 conexion=conectar()
                 cursor=conexion.cursor()
                 cursor.execute(""" delete from Repuestos where id_repuesto = ?""", (id,))
@@ -106,19 +110,22 @@ class Repuesto():
         
 
     def modificar_repuesto(self):
-        linea()
-        print("----MODIFICAR REPUESTO----")
-        linea()
         while True:
-            repuesto=int(input("Ingrsar el ID del repuesto que desea modificar:   "))
+            linea()
+            print("----MODIFICAR REPUESTO----")
+            linea()
+            conexion=conectar()
+            cursor=conexion.cursor()
+            repuesto=input("Ingrsar el nombre del repuesto que desea modificar:  ").strip().lower()
+            cursor.execute("select id_repuesto from Repuestos where nombre= ?",(repuesto,))
             print("--Atributos a modificar--")
             print ("1- Nombre")
             print ("2- Marca")
             print ("3- Stock")
             print ("4- Precio Unitario")
             opcion=int(input("Ingresar el numero del atributo que desea modificar:  "))
-            dato=input("Ingresar el nuevo valor: ")
-            columnas={"1":"Nombre", "2":"MArca","3":"Stock","4":"Precio Unitario"}
+            dato=input("Ingresar el nuevo valor: ").lower()
+            columnas={"1":"nombre", "2":"marca","3":"stock","4":"precio_unitario"}
             if opcion in columnas:
                 nombre_columna=columnas[opcion]
                 self.ejecutar_modificacion_repuesto (dato, nombre_columna ,repuesto)
@@ -127,10 +134,10 @@ class Repuesto():
             
         
     def listar_repuestos(self):
-        linea()
-        print("----LISTA DE REPUESTOS----")
-        linea()
         try:
+            linea()
+            print("----LISTA DE REPUESTOS----")
+            linea()
             conexion=conectar()
             cursor=conexion.cursor()
             cursor.execute("""select * from Repuestos""")

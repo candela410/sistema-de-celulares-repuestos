@@ -1,12 +1,12 @@
 import sqlite3
-from datetime import datetime
 import os
+import platform
 
 def conectar():
-    return sqlite3.connect(r"C:\Users\cande\OneDrive\Documentos\tablas1.db")
+    return sqlite3.connect("tablas1.db")
 
 
-def tabla_proveedores():
+def tablas():
     conexion=conectar()
     cursor= conexion.cursor()
     cursor.execute("""
@@ -18,36 +18,20 @@ def tabla_proveedores():
         estado varchar(10)
     )""")
 
-    conexion.commit()
-    conexion.close()
-
-def tabla_categorias():
-    conexion=conectar()
-    cursor= conexion.cursor()
     cursor.execute("""
     create table if not exists Categorias(
         id_categoria integer primary key autoincrement,
         nombre varchar(100) not null
     )""")
     
-    conexion.commit()
-    conexion.close()
 
-def tabla_marcas():
-    conexion=conectar()
-    cursor=conexion.cursor()
     cursor.execute("""
     create table if not exists Marcas(
         id_marca integer primary key autoincrement, 
         nombre varchar(100)
     )""")
 
-    conexion.commit()
-    conexion.close()
 
-def tabla_repuestos():
-    conexion=conectar()
-    cursor=conexion.cursor()
     cursor.execute("""
         create table if not exists Repuestos(
             id_repuesto integer primary key autoincrement,
@@ -60,14 +44,7 @@ def tabla_repuestos():
             foreign key (id_marca) references Marcas (id_marca)
     )""")   
 
-    conexion.commit()
-    conexion.close()
 
-
-
-def tabla_pedidos():
-    conexion=conectar()
-    cursor=conexion.cursor()
     cursor.execute("""
     create table if not exists Pedidos(
         id_pedido integer primary key autoincrement,
@@ -78,22 +55,17 @@ def tabla_pedidos():
         estado varchar(100),
         foreign key (id_proveedor) references Proveedores (id_proveedor)
     )""")
-    fecha_pedido =datetime.now()
-    conexion.commit()
-    conexion.close()
-    
-def tabla_detalle_pedidos():
-    conexion=conectar()
-    cursor=conexion.cursor()
+   
+
     cursor.execute("""
     create table if not exists Detalle_pedidos(
         id_pedido integer,
         id_repuesto integer,
-        primary key (id_pedido,id_repuesto),
-        foreign key (id_pedido) references Pedidos (id_pedidos),
-        foreign key (id_repuesto) references Repuestos (id_repuesto),
         cantidad integer not null,
-        precio_total integer not null
+        precio_total integer,
+        primary key (id_pedido,id_repuesto),
+        foreign key (id_pedido) references Pedidos (id_pedido),
+        foreign key (id_repuesto) references Repuestos (id_repuesto) 
     )""")
 
     conexion.commit()
@@ -102,3 +74,10 @@ def tabla_detalle_pedidos():
 def linea():
     ancho = os.get_terminal_size().columns
     print("=" * ancho)
+
+def limpiar_pantalla():
+    os.system('cls' if platform.system() == 'Windows' else 'clear')
+
+def pausa():
+    input("\nPresioná Enter para volver al menú...")
+    limpiar_pantalla()     

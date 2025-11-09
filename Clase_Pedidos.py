@@ -1,9 +1,9 @@
-from BD import tabla_pedidos
 from Clase_Detalle import Detalle_pedido
 from Clase_Proveedores import Proveedor 
 from BD import conectar
 from datetime import datetime
 from BD import linea
+from BD import tablas
 
 
 class Pedido():
@@ -13,11 +13,13 @@ class Pedido():
         self.fecha_entrega=fecha_entrega
         self.total=total
         self.proveedor1=Proveedor(id_proveedor)
-        tabla_pedidos()
+        tablas()
+     
+    
 
     def agregar_pedido(self):
         linea()
-        print("--REALIZAR PEDIDO--")
+        print("----REALIZAR PEDIDO----")
         linea()
            
         while True:
@@ -25,14 +27,14 @@ class Pedido():
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                cursor.execute("""select id, nombre from proveedores where estado="Activo" """)
-                proveedores=(cursor.fetchall())
+                cursor.execute("""select id_proveedor, nombre from Proveedores where estado="Activo" """)
+                proveedores=cursor.fetchall()
                 if not proveedores:
                     print()
                     print("No hay proveedores registrados")
                     print()
                 else:
-                    print("--PROVEEDORES DISPONIBLES--")
+                    print("----PROVEEDORES DISPONIBLES----")
                     for id, nombre in proveedores:
                         print(f"ID: {id} - Nombre: {nombre}")
                     id_prov=int(input("Ingrese el Id del proveedor: "))
@@ -43,13 +45,13 @@ class Pedido():
                     conexion.commit()
                     cursor.execute(""" select id_producto, nombre from Repuestos where id_proveedor=?""",(id_prov,))
                     repuestos=cursor.fetchall()
-                    print("Repuesto del proveedor ")
+                    print("----REPUESTOS DEL PROVEEDOR----")
                     for id, nombre in repuestos:
                         print (f"ID: {id} - Nombre: {nombre}")
                     det=Detalle_pedido()
                     det.agregar_detalle(id_pedido)
                     print()
-                    print("Pedido realizado correctamente")
+                    print("Pedido realizado correctamente....")
             except Exception as e:
                 print("Error al realizar el pedido", e)
             finally:
@@ -90,6 +92,10 @@ class Pedido():
             linea()
         finally:
             conexion.close()
+
+
+
+        
 
 
 

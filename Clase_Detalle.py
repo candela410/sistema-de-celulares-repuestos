@@ -1,6 +1,6 @@
-from BD import tabla_detalle_pedidos
 from BD import conectar
 from BD import linea
+from BD import tablas
 
 class Detalle_pedido():
     def __init__(self,id_pedido,id_repuesto,cantidad,precio_total):
@@ -8,13 +8,16 @@ class Detalle_pedido():
         self.id_repuesto=id_repuesto
         self.cantidad=cantidad
         self.precio_total=precio_total
-        tabla_detalle_pedidos()
+        tablas()
+        
 
 
     def agregar_detalle(self, id_pedido):
         try:
             while True:
-                id_repuesto = input("Ingrese ID del repuesto: ")
+                repuesto = input("Ingrese el nombre del repuesto: ").strip().lower()
+                cursor.execute("select id_repuesto from Repuestos where nombre=?",(repuesto,))
+                id_repuesto=cursor.fetchone()
                 cantidad = input("Ingrese cantidad: ")
                 precio_total=0
                 conexion = conectar()
@@ -24,7 +27,7 @@ class Detalle_pedido():
                     VALUES (?, ?, ?, ?)
                 """, (id_pedido, id_repuesto, cantidad, precio_total))
                 conexion.commit()
-                continuar=int(input("Si desea agregar otro producto ingrese 1 sino 0 "))
+                continuar=int(input("Si desea agregar otro producto ingrese 1 sino 0:   "))
                 linea()
                 if continuar != 1:
                     break
@@ -94,7 +97,5 @@ class Detalle_pedido():
         finally:
             conexion.close()
     
-
-
     
 

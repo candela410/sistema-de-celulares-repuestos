@@ -1,6 +1,6 @@
-from BD import tabla_proveedores
 from BD import conectar
 from BD import linea
+from BD import tablas
 class Proveedor():
     def __init__(self, id_proveedor=None,nombre="",telefono=None, direccion="", estado=""):
         self.Id_proveedor=id_proveedor
@@ -8,14 +8,16 @@ class Proveedor():
         self.telefono=telefono
         self.direccion=direccion
         self.estado=estado
-        tabla_proveedores()
+        tablas()
+    
+
 
     def agregar_proveedor(self):
         linea()
         print("----AGREGAR PROVEEDORES----")
         linea()
         while True:
-            nombre=input("Ingresar el nombre del proveedor:  ")
+            nombre=input("Ingresar el nombre del proveedor:  ").strip().lower()
             telefono=input("Ingresar el teléfono:  ")
             direccion=input("Ingrese la dirección:  ")
         
@@ -43,16 +45,18 @@ class Proveedor():
 
 
     def eliminar_proveedor(self):
-        linea()
-        print("----ELIMINAR UN PROVEEDOR----")
-        linea()
         while True:
-            proveedor=input("Ingrese el ID del proveedor que desea Eliminar: ")
+            linea()
+            print("----ELIMINAR UN PROVEEDOR----")
+            linea()
+            proveedor=input("Ingrese el nombre del proveedor que desea Eliminar: ").strip().lower()
+            cursor.execute("select id_proveedor from Proveedores where nombre= ?",(proveedor,))
+            id=cursor.fetchone()
        
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                cursor.execute("delete from proveedores where id_proveedor= ?",(proveedor,))
+                cursor.execute("delete from proveedores where id_proveedor= ?",(id,))
                 conexion.commit()
                 print()
                 print(f"El proveedor fue eliminado correctamente")
@@ -75,7 +79,7 @@ class Proveedor():
         try:
             conexion=conectar()
             cursor=conexion.cursor()
-            cursor.execute(f"""update Proveedores set {nombre_columna}= ? where Id_proveedor= ?""",(dato,proveedor))
+            cursor.execute(f"""update Proveedores set {nombre_columna}= ? where id_proveedor= ?""",(dato,proveedor))
             conexion.commit()
             print()
             print(f"El atributo{nombre_columna} fue modificado ")
@@ -94,8 +98,8 @@ class Proveedor():
         while True:
             conexion=conectar()
             cursor=conexion.cursor()
-            proveedor=input("Ingrese el nombre del proveedor el cual desea modificar: ")
-            cursor.execute("select id_proveedor from Proveedores where id_proveedor=? ",(proveedor,) )
+            proveedor=input("Ingrese el nombre del proveedor el cual desea modificar: ").strip().lower()
+            cursor.execute("select id_proveedor from Proveedores where nombre =? ",(proveedor,) )
             proveedor1=cursor.fetchone()
             print ("--ATRIBUTOS PARA MODIFICAR--")
             print ("1- Nombre")
@@ -104,7 +108,7 @@ class Proveedor():
             print ("4- Estado")
             opcion=input("Ingrese el numero del atributo que desea modificar:  ")
             dato=input("Ingresar el nuevo valor: ")
-            columnas={"1":"Nombre", "2":"Telefono","3":"Direccion","4":"Estado"}
+            columnas={"1":"nombre", "2":"telefono","3":"direccion","4":"estado"}
             if opcion in columnas:
                 nombre_columna=columnas[opcion]
                 self.ejecucion_modificacion_prov(nombre_columna, dato, proveedor1)
@@ -143,6 +147,12 @@ class Proveedor():
         finally:
             conexion.close()
         linea()
+    
+
+            
+
+    
+
     
 
             

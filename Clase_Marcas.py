@@ -1,11 +1,12 @@
-from BD import tabla_marcas
 from BD import conectar
 from BD import linea
+from BD import tablas
 class Marca():  
     def __init__(self,id_marca=None, nombre=""):
         self.__id_marca=id_marca
         self.nombre=nombre
-        tabla_marcas()
+        tablas()
+       
     
     @property
     def marca (self):
@@ -18,7 +19,7 @@ class Marca():
 
     def agregar_marca(self):
         while True:
-            nombre=input("Ingresar el nombre de la nueva marca:  ")
+            nombre=input("Ingresar el nombre de la nueva marca:  ").strip().lower()
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
@@ -39,7 +40,9 @@ class Marca():
 
     def eliminar_marca(self):
         while True:
-            id=int(input("Ingresar el ID de la marca que desea eliminar:  "))
+            nombre=input("Ingresar el nombre de la marca que desea eliminar:  ").strip().lower()
+            cursor.execute("select id_marca from Marcas where nombre= ?",(nombre,))
+            id=cursor.fetchone()
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
@@ -60,16 +63,18 @@ class Marca():
     
     def modificar_marca(self):
         while True:
-            id=input("Ingresar el ID de a marca que desea modificar:  ")
-            nombre=input("Ingresar su nuevo nombre:  ")
+            nombre=input("Ingresar el nombre de a marca que desea modificar:  ").strip().lower()
+            cursor.execute("select id_marca from Marcas where nombre=?", (nombre,))
+            id=cursor.fetchone()
+            nuevo=input("Ingresar su nuevo nombre:  ").strip().lower()
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                cursor.execute(""" update marcas set nombre= ? where id_marca= ?""",(nombre, id))
+                cursor.execute(""" update marcas set nombre= ? where id_marca= ?""",(nuevo, id))
                 conexion.commit()
-                print("Se modificó correctamente")
+                print("Se modificó correctamente....")
             except Exception as e:
-                print("Error al modificar la marca",e)
+                print("Error al modificar la marca...",e)
             finally:
                 conexion.close()
             linea()
@@ -82,7 +87,7 @@ class Marca():
       
     def listar_marca(self):
         linea()
-        print("--LISTA DE MARCAS--")
+        print("----LISTA DE MARCAS----")
         linea()
         try:
             conexion=conectar()
@@ -91,7 +96,7 @@ class Marca():
             marcas=list(cursor.fetchall())
             if not marcas:
                 print()
-                print("No hay marcas registradas")
+                print("No hay marcas registradas...")
                 print()
             else:
                 for id_marca, nombre in marcas:
