@@ -77,7 +77,7 @@ class Categoria():
             cursor=conexion.cursor()
             cursor.execute(""" update categorias set nombre= ? where id_categoria= ? """, (nuevo, id))
             conexion.commit()
-            print(f"La categoria {id_cat} fué modificada correctamente ")
+            print(f"La categoria {id} fué modificada correctamente ")
         except Exception as e:
             print ("Error al modificar una categoria",e)
         finally:
