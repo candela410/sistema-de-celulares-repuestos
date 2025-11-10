@@ -1,7 +1,4 @@
-from BD import conectar
-from BD import linea
-from BD import tablas
-
+from BD import conectar, linea, tablas, limpiar_pantalla, pausa
 
 class Repuesto():
     def __init__(self,id_repuesto=None, nombre="", stock=0,precio_unitario=0.0,id_marca=None,id_categoria=None):
@@ -15,6 +12,7 @@ class Repuesto():
        
     
     def agregar_repuestos(self):
+        limpiar_pantalla()
         while True:
             linea()
             print ("----AGREGAR REPUESTO----")
@@ -66,9 +64,11 @@ class Repuesto():
             linea()
             if continuar != 1:
                 break
+            pausa()
         
 
     def eliminar_repuestos(self):
+        limpiar_pantalla()
         while True:
             linea()
             print("----ELIMINAR REPUESTO----")
@@ -90,50 +90,60 @@ class Repuesto():
                 linea()
             finally:
                 conexion.close()
+            linea()
+            continuar=input("Si desea eliminar otro repuesto ingrese 1 sino 0:  ")
+            linea()
+            if continuar != '1':
+                break
+        pausa()
         
 
-    def ejecutar_modificacion_repuesto(self,dato, nombre_columna, repuesto):
-        try:
-            conexion=conectar()
-            cursor=conexion.cursor()
-            cursor.execute(f""" update repuestos set {nombre_columna}= ? where id_repuesto= ?""", (dato, repuesto))
-            conexion.commit()
-            linea()
-            print("El respuesto se modificó correctamente...")
-            linea()
-        except Exception as e:
-            linea()
-            print(f"Error al modificar la la columna {nombre_columna}",e)
-            linea()
-        finally:
-            conexion.close()
-        
+    
 
     def modificar_repuesto(self):
+        limpiar_pantalla()
+        linea()
+        print("----MODIFICAR REPUESTO----")
+        linea()
         while True:
-            linea()
-            print("----MODIFICAR REPUESTO----")
-            linea()
-            conexion=conectar()
-            cursor=conexion.cursor()
-            repuesto=input("Ingrsar el nombre del repuesto que desea modificar:  ").strip().lower()
-            cursor.execute("select id_repuesto from Repuestos where nombre= ?",(repuesto,))
-            print("--Atributos a modificar--")
-            print ("1- Nombre")
-            print ("2- Marca")
-            print ("3- Stock")
-            print ("4- Precio Unitario")
-            opcion=int(input("Ingresar el numero del atributo que desea modificar:  "))
-            dato=input("Ingresar el nuevo valor: ").lower()
-            columnas={"1":"nombre", "2":"marca","3":"stock","4":"precio_unitario"}
-            if opcion in columnas:
-                nombre_columna=columnas[opcion]
-                self.ejecutar_modificacion_repuesto (dato, nombre_columna ,repuesto)
-            else:
-                print("opcion invalida")
+            try:
+                
+                conexion=conectar()
+                cursor=conexion.cursor()
+                repuesto=input("Ingrsar el nombre del repuesto que desea modificar:  ").strip().lower()
+                print("--Atributos a modificar--")
+                print ("1- Nombre")
+                print ("2- Marca")
+                print ("3- Stock")
+                print ("4- Precio Unitario")
+                opcion=input("Ingresar el numero del atributo que desea modificar:  ")
+                dato=input("Ingresar el nuevo valor: ")
+                columnas={"1":"nombre", "2":"marca","3":"stock","4":"precio_unitario"}
+                if opcion in columnas:
+                    nombre_columna=columnas[opcion]
+                    cursor.execute(f""" update repuestos set {nombre_columna}= ? where nombre= ?""", (dato, repuesto))
+                    conexion.commit()
+                    linea()
+                    print("El respuesto se modificó correctamente...")
+                    linea()
+                else:
+                    print("opcion invalida")
+                linea()
+                continuar=input("Si desea modificar otro repuesto ingrese 1 sino 0:  ")
+                linea()
+                if continuar != '1':
+                    break
+                pausa()
+            except Exception as e:
+                linea()
+                print(f"Error al modificar la la columna {nombre_columna}",e)
+                linea()
+            finally:
+                conexion.close()
             
         
     def listar_repuestos(self):
+        limpiar_pantalla()
         try:
             linea()
             print("----LISTA DE REPUESTOS----")
@@ -160,9 +170,11 @@ class Repuesto():
             print("Error al mostrar la lista de Respuestos",e)
         finally:
             conexion.close()
+        pausa()
 
     
 
+            
             
 
       

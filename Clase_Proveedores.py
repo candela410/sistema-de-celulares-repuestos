@@ -1,6 +1,5 @@
-from BD import conectar
-from BD import linea
-from BD import tablas
+from BD import conectar, linea, tablas, limpiar_pantalla, pausa
+
 class Proveedor():
     def __init__(self, id_proveedor=None,nombre="",telefono=None, direccion="", estado=""):
         self.Id_proveedor=id_proveedor
@@ -13,10 +12,12 @@ class Proveedor():
 
 
     def agregar_proveedor(self):
+        limpiar_pantalla()
         linea()
         print("----AGREGAR PROVEEDORES----")
         linea()
         while True:
+            limpiar_pantalla
             nombre=input("Ingresar el nombre del proveedor:  ").strip().lower()
             telefono=input("Ingresar el teléfono:  ")
             direccion=input("Ingrese la dirección:  ")
@@ -37,14 +38,16 @@ class Proveedor():
             finally:
                 conexion.close()
             print()
-            continuar=int(input("Si desea agregar otro producto ingrese 1 sino 0 "))
+            continuar=int(input("Si desea agregar otro proveedor ingrese 1 sino 0 "))
             linea()
             if continuar != 1:
                 break
+            pausa()
+        pausa()
         
 
-
     def eliminar_proveedor(self):
+        limpiar_pantalla()
         while True:
             linea()
             print("----ELIMINAR UN PROVEEDOR----")
@@ -72,14 +75,15 @@ class Proveedor():
             linea()
             if continuar != 1:
                 break
+        pausa()
         
         
 
-    def ejecucion_modificacion_prov(self,nombre_columna,dato,proveedor):
+    def ejecucion_modificacion_prov(self,nombre_columna,dato,proveedor2):
         try:
             conexion=conectar()
             cursor=conexion.cursor()
-            cursor.execute(f"""update Proveedores set {nombre_columna}= ? where id_proveedor= ?""",(dato,proveedor))
+            cursor.execute(f"""update Proveedores set {nombre_columna}= ? where id_proveedor= ?""",(dato,proveedor2))
             conexion.commit()
             print()
             print(f"El atributo{nombre_columna} fue modificado ")
@@ -92,6 +96,7 @@ class Proveedor():
             conexion.close() 
 
     def modificar_proveedores(self):
+        limpiar_pantalla()
         linea()
         print("----MODIFICAR PROVEEDOR----")
         linea()
@@ -101,6 +106,8 @@ class Proveedor():
             proveedor=input("Ingrese el nombre del proveedor el cual desea modificar: ").strip().lower()
             cursor.execute("select id_proveedor from Proveedores where nombre =? ",(proveedor,) )
             proveedor1=cursor.fetchone()
+            proveedor2=proveedor1[0]
+            
             print ("--ATRIBUTOS PARA MODIFICAR--")
             print ("1- Nombre")
             print ("2- Telefono")
@@ -111,7 +118,7 @@ class Proveedor():
             columnas={"1":"nombre", "2":"telefono","3":"direccion","4":"estado"}
             if opcion in columnas:
                 nombre_columna=columnas[opcion]
-                self.ejecucion_modificacion_prov(nombre_columna, dato, proveedor1)
+                self.ejecucion_modificacion_prov(nombre_columna, dato, proveedor2)
             else: 
                 print("Opcion invalida")
             print()
@@ -119,12 +126,12 @@ class Proveedor():
             linea()
             if continuar != 1:
                 break
+        pausa()
         
 
 
-      
-
     def mostrar_proveedores(self):
+        limpiar_pantalla()
         linea()
         print ("--LISTA DE PROVEEDORES--")
         linea()
@@ -147,8 +154,7 @@ class Proveedor():
         finally:
             conexion.close()
         linea()
-    
-
+        pausa()
             
 
     

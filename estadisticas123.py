@@ -1,7 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-from BD import conectar
+
+from BD import conectar, limpiar_pantalla, pausa 
 
 
 class Estadisticas1:
@@ -13,7 +14,7 @@ class Estadisticas1:
 
 
     def proveedor_con_mas_pedidos(self):
-        self.limpiar_pantalla()
+        limpiar_pantalla()
         print("\nGenerando gráfico de pedidos por proveedor (DINÁMICO)...")
 
         query = """
@@ -27,7 +28,7 @@ class Estadisticas1:
 
         if df.empty or df['Cantidad_Pedidos'].sum() == 0:
             print("\n[i] No hay pedidos cargados aún. Agregá uno para ver las estadísticas.")
-            self.pausa()
+            pausa()
             return
 
         plt.figure(figsize=(7, 5))
@@ -63,11 +64,11 @@ class Estadisticas1:
         plt.grid(False)
         plt.show(block=True)
         print("\nGráfico generado correctamente.")
-        self.pausa()
+        pausa()
 
 
     def marcas_mas_pedidas(self):
-        self.limpiar_pantalla()
+        limpiar_pantalla()
         print("\nGenerando gráfico de marcas más pedidas (DINÁMICO)...")
 
         query = """
@@ -102,11 +103,11 @@ class Estadisticas1:
         plt.tight_layout()
         plt.show(block=True)
         print("\nGráfico generado correctamente.")
-        self.pausa()
+        pausa()
 
 
     def proveedores_por_estado(self):
-        self.limpiar_pantalla()
+        limpiar_pantalla()
         print("\nGenerando gráfico de estado de proveedores (DINÁMICO)...")
         
         query = """
@@ -152,7 +153,7 @@ class Estadisticas1:
         plt.tight_layout()
         plt.show(block=True)
         print("\nGráfico generado correctamente.")
-        self.pausa()
+        pausa()
 
 
 
@@ -181,7 +182,7 @@ class Estadisticas1:
                 print(f"[!] Tabla '{t}' vacía, no se exportó.\n")
 
         print("[✔] Backup completado con éxito.")
-        self.pausa()
+        pausa()
 
     def restaurar_desde_csv(self):
         carpeta_backup = "backups"
@@ -212,5 +213,5 @@ class Estadisticas1:
 
         self.conexion.commit()
         print("[✔] Restauración completada con éxito.")
-        self.pausa()
+        pausa()
 

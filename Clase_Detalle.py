@@ -1,31 +1,33 @@
-from BD import conectar
-from BD import linea
-from BD import tablas
+from BD import conectar, linea, tablas, limpiar_pantalla, pausa
 
 class Detalle_pedido():
-    def __init__(self,id_pedido,id_repuesto,cantidad,precio_total):
+    def __init__(self,id_pedido=None,id_repuesto=None,cantidad=None,precio_total=0):
         self.id_pedido=id_pedido
         self.id_repuesto=id_repuesto
         self.cantidad=cantidad
         self.precio_total=precio_total
         tablas()
         
-
-
     def agregar_detalle(self, id_pedido):
+        print("----AGREGAR DETALLE A PEDIDO----")
         try:
+            conexion = conectar()
+            cursor = conexion.cursor()
             while True:
                 repuesto = input("Ingrese el nombre del repuesto: ").strip().lower()
                 cursor.execute("select id_repuesto from Repuestos where nombre=?",(repuesto,))
                 id_repuesto=cursor.fetchone()
+                if id_repuesto is None:
+                    print(f"Repuesto '{repuesto}' no encontrado.")
+                    continue
+                id_repuesto1 = id_repuesto[0]
                 cantidad = input("Ingrese cantidad: ")
                 precio_total=0
-                conexion = conectar()
-                cursor = conexion.cursor()
+            
                 cursor.execute("""
-                    INSERT INTO Detalle_Pedido (id_pedido, id_repuesto, cantidad, precio_total)
+                    INSERT INTO Detalle_pedidos (id_pedido, id_repuesto, cantidad, precio_total)
                     VALUES (?, ?, ?, ?)
-                """, (id_pedido, id_repuesto, cantidad, precio_total))
+                """, (id_pedido, id_repuesto1, cantidad, precio_total))
                 conexion.commit()
                 continuar=int(input("Si desea agregar otro producto ingrese 1 sino 0:   "))
                 linea()
@@ -46,20 +48,26 @@ class Detalle_pedido():
             conexion = conectar()
             cursor = conexion.cursor()
             cursor.execute("""
-                SELECT r.nombre, d.cantidad, d.precio_total, 
-                INNER JOIN Pedidos p ON d.id_pedido = p.id_pedido
-                INNER JOIN Repuestos r ON d.id_rep = r.id_rep
-                where id_pedido= ?
-            """, (id_pedido))
+                SELECT r.nombre, d.cantidad, d.precio_total 
+                from Repuestos r 
+                INNER JOIN Detalle_pedidos d ON d.id_repuesto = r.id_repuesto
+                INNER JOIN Pedidos p ON p.id_pedido = d.id_pedido
+                where d.id_pedido= ?
+            """, (id_pedido,))
             detalles =list(cursor.fetchall())
-            for nombre, cantidad, precio in detalles:
-                print(f"Repuesto: {nombre} | Cantidad: {cantidad} | Total: ${precio} ")
+            if not detalles:
+                print("No hay detalles para este pedido.")
+            else:
+                for nombre, cantidad, precio in detalles:
+                    print(f"Repuesto: {nombre} | Cantidad: {cantidad} | Total: ${precio} ")
         except Exception as e:
             print("Error al listar los detalles:", e)
         finally:
             conexion.close()
+        linea()
 
     def eliminar_detalle(self):
+        limpiar_pantalla()
         print("\n=== Eliminar Detalle ===")
         id_detalle = input("Ingrese el ID del detalle que desea eliminar: ")
 
@@ -73,8 +81,10 @@ class Detalle_pedido():
             print("Error al eliminar el detalle:", e)
         finally:
             conexion.close()
+        pausa()
 
     def modificar_detalle(self):
+        limpiar_pantalla()
         print("\n=== Modificar Detalle ===")
         id_detalle = input("Ingrese el ID del detalle a modificar: ")
         nuevo_id_pedido = input("Nuevo ID del pedido: ")
@@ -96,6 +106,8 @@ class Detalle_pedido():
             print("Error al modificar el detalle:", e)
         finally:
             conexion.close()
+        pausa()
     
     
+
 

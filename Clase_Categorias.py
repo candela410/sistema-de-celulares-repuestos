@@ -1,6 +1,4 @@
-from BD import conectar
-from BD import linea
-from BD import tablas
+from BD import conectar, linea, tablas, limpiar_pantalla, pausa
 
 class Categoria():
     def __init__(self,id_categoria=None,nombre=""):
@@ -18,6 +16,7 @@ class Categoria():
         self.__id_categoria=nuevo_id
 
     def agregar_categoria(self):
+        limpiar_pantalla()
         print("----AGREGAR CATEGORIA----")
         linea()
         while True:
@@ -40,9 +39,11 @@ class Categoria():
             linea()
             if continuar != 1:
                 break
+        pausa()
 
 
     def eliminar_categoria(self):
+        limpiar_pantalla()
         linea()
         print("----ELIMINAR CATEGORIA----")
         linea()
@@ -61,30 +62,43 @@ class Categoria():
                 print("Error al eliminar la categoria...")
             finally:
                 conexion.close()
+            linea()
             continuar=int(input("Si desea eliminar otra categoria  ingrese 1 sino 0:   "))
             linea()
             if continuar != 1:
                 break
+        pausa()
 
 
     def modificar_categoria(self):
-        nombre=input("Ingrese el nombre de la categoria que desea modficar").strip().lower()
-        cursor.execute("select id_categoria from Categorias where nombre=?", (nombre,))
-        id=cursor.fetchone()
-        nuevo=("Ingrese el su nuevo nombre")
-        try:
-            conexion=conectar()
-            cursor=conexion.cursor()
-            cursor.execute(""" update categorias set nombre= ? where id_categoria= ? """, (nuevo, id))
-            conexion.commit()
-            print(f"La categoria {id} fué modificada correctamente ")
-        except Exception as e:
-            print ("Error al modificar una categoria",e)
-        finally:
-            conexion.close()
+        while True:
+            limpiar_pantalla()
+            print("----MODIFICAR CATEGORIA----")
+            linea()
+            nombre=input("Ingrese el nombre de la categoria que desea modficar").strip().lower()
+            cursor.execute("select id_categoria from Categorias where nombre=?", (nombre,))
+            id=cursor.fetchone()
+            nuevo=("Ingrese el su nuevo nombre")
+            try:
+                conexion=conectar()
+                cursor=conexion.cursor()
+                cursor.execute(""" update categorias set nombre= ? where id_categoria= ? """, (nuevo, id))
+                conexion.commit()
+                print(f"La categoria {id} fué modificada correctamente ")
+            except Exception as e:
+                print ("Error al modificar una categoria",e)
+            finally:
+                conexion.close()
+            linea()
+            continuar=int(input("Si desea modificar otra categoria ingrese 1 sino 0:   "))
+            linea()
+            if continuar != 0:
+                break
+            pausa()
 
 
     def mostrar_categorias (self):
+        limpiar_pantalla()
         linea()
         print("----LISTA DE CATEGORIAS----")
         linea()
@@ -102,7 +116,7 @@ class Categoria():
             print("Error al mostrar las categorias ", e)
         finally:
             conexion.close()
-
+        pausa()
 
 
 

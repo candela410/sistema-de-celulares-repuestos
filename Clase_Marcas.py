@@ -1,6 +1,4 @@
-from BD import conectar
-from BD import linea
-from BD import tablas
+from BD import conectar, linea, tablas, limpiar_pantalla, pausa
 class Marca():  
     def __init__(self,id_marca=None, nombre=""):
         self.__id_marca=id_marca
@@ -18,6 +16,9 @@ class Marca():
 
 
     def agregar_marca(self):
+        limpiar_pantalla()
+        print("----AGREGAR MARCA----")
+        linea()
         while True:
             nombre=input("Ingresar el nombre de la nueva marca:  ").strip().lower()
             try:
@@ -36,9 +37,12 @@ class Marca():
             linea()
             if continuar != 1:
                 break
+        pausa()
         
 
     def eliminar_marca(self):
+        limpiar_pantalla()
+        print("----ELIMINAR MARCA----")
         while True:
             nombre=input("Ingresar el nombre de la marca que desea eliminar:  ").strip().lower()
             cursor.execute("select id_marca from Marcas where nombre= ?",(nombre,))
@@ -58,10 +62,14 @@ class Marca():
             linea()
             if continuar != 1:
                 break
+        pausa()
         
         
     
     def modificar_marca(self):
+        limpiar_pantalla() 
+        print("----MODIFICAR MARCA----")
+        linea()
         while True:
             nombre=input("Ingresar el nombre de a marca que desea modificar:  ").strip().lower()
             cursor.execute("select id_marca from Marcas where nombre=?", (nombre,))
@@ -82,10 +90,11 @@ class Marca():
             linea()
             if continuar != 1:
                 break
+            pausa()
 
-        
       
     def listar_marca(self):
+        limpiar_pantalla()
         linea()
         print("----LISTA DE MARCAS----")
         linea()
@@ -107,3 +116,6 @@ class Marca():
             print("Error al listas las marcas",e)
         finally:
             conexion.close()
+        pausa()
+    
+

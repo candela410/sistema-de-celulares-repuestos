@@ -1,10 +1,7 @@
 from Clase_Detalle import Detalle_pedido
 from Clase_Proveedores import Proveedor 
-from BD import conectar
+from BD import conectar, linea, tablas, limpiar_pantalla, pausa 
 from datetime import datetime
-from BD import linea
-from BD import tablas
-
 
 class Pedido():
     def __init__(self, id_pedidos=None,fecha_pedido=None, fecha_entrega=None, total=0,id_proveedor=None):
@@ -15,9 +12,9 @@ class Pedido():
         self.proveedor1=Proveedor(id_proveedor)
         tablas()
      
-    
 
     def agregar_pedido(self):
+        limpiar_pantalla()
         linea()
         print("----REALIZAR PEDIDO----")
         linea()
@@ -38,14 +35,14 @@ class Pedido():
                     for id, nombre in proveedores:
                         print(f"ID: {id} - Nombre: {nombre}")
                     id_prov=int(input("Ingrese el Id del proveedor: "))
-                    fecha_pedido=datetime.now().stryftime("%Y-%m-%d")
+                    fecha_pedido=datetime.now().strftime("%Y-%m-%d")
                     cursor.execute("""insert into Pedidos(fecha_pedido,fecha_entrega, total, id_proveedor,estado )
                                 values (?,null,0,?,"Pendiente")""",(fecha_pedido,id_prov))
                     id_pedido=cursor.lastrowid
                     conexion.commit()
-                    cursor.execute(""" select id_producto, nombre from Repuestos where id_proveedor=?""",(id_prov,))
+                    cursor.execute(""" select id_repuesto, nombre from Repuestos""")
                     repuestos=cursor.fetchall()
-                    print("----REPUESTOS DEL PROVEEDOR----")
+                    print("----REPUESTOS ----")
                     for id, nombre in repuestos:
                         print (f"ID: {id} - Nombre: {nombre}")
                     det=Detalle_pedido()
@@ -60,11 +57,13 @@ class Pedido():
             linea()
             if continuar != 1:
                 break
+        pausa()
             
         
 
     
     def listar_pedidos(self):
+        limpiar_pantalla()
         linea()
         print("----LISTA DE PEDIDOS----")
         linea()
@@ -85,6 +84,7 @@ class Pedido():
                     linea()
                     det=Detalle_pedido()
                     det.listar_detalles(p[0])
+                    print("-" * 50)
 
         except Exception as e:
             linea()
@@ -92,6 +92,7 @@ class Pedido():
             linea()
         finally:
             conexion.close()
+        pausa()
 
 
 

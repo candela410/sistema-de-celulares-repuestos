@@ -3,13 +3,13 @@ from Clase_Categorias import Categoria
 from Clase_Marcas import Marca
 from Clase_Repuestos import Repuesto
 from Clase_Pedidos import Pedido
-from BD import linea
-from BD import tablas
-import platform
-import os
-from estadisticas123 import  Estadisticas1
-from BD import pausa
-from BD import limpiar_pantalla
+from BD import linea, tablas, limpiar_pantalla, pausa 
+from estadisticas123 import Estadisticas1
+import os 
+
+
+tablas()
+
 
 def menu_principal():
     while True:
@@ -40,12 +40,10 @@ def menu_principal():
             print("Opcion invalida")
             pausa()
 
-
-
-
 def Repuestos():
     rep=Repuesto()
     while True:
+        limpiar_pantalla()
         limpiar_pantalla()
         print ("----REPUESTOS----")
         linea()
@@ -77,7 +75,7 @@ def Repuestos():
                 break
         else:
             print("Opcion invalida...")
-        pausa()
+            pausa()
 
 def Marcas():
     marca= Marca()
@@ -105,7 +103,7 @@ def Marcas():
             break
         else:
             print("Opción Invalida...")
-        pausa()
+            pausa()
 
                   
 def Categorias():
@@ -134,10 +132,8 @@ def Categorias():
             break
         else:
             print("Opcion Inavalida...")
-        pausa()
+            pausa()
             
-
-
 def Proveedores():
     prov=Proveedor()
     while True:
@@ -164,9 +160,8 @@ def Proveedores():
             break
         else:
             print("Opción Invalida...")
-        pausa()
+            pausa()
            
-
 def Pedidos():
     ped=Pedido()
     while True:
@@ -187,7 +182,7 @@ def Pedidos():
             break
         else:
             print("Opción Invalida...")
-        pausa()
+            pausa()
           
 
 def estadisticas():
@@ -212,15 +207,16 @@ def estadisticas():
                 break
             else:
                 print("Opción inválida.")
-            pausa()
+                pausa()
 
 
 def menu_backup_restauracion():
         est1=Estadisticas1()
         while True:
+            limpiar_pantalla()
             os.system('cls')
             print("\n" + "="*50)
-            print("      SISTEMA DE BACKUP Y RESTAURACION")
+            print("      SISTEMA DE BACKUP Y RESTAURACION   ")
             print("="*50 + "\n")
             print("1- Exportar todas las tablas a CSV (Backup)")
             print("2- Restaurar tablas desde CSV (Recuperar)")
@@ -239,8 +235,8 @@ def menu_backup_restauracion():
                 break
             else:
                 print("Opción inválida. Intente de nuevo.")
-            pausa()
+                pausa()
 
 if __name__=="__main__":
-    tablas()
+
     menu_principal()
