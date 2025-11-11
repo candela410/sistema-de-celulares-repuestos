@@ -42,9 +42,8 @@ def menu_principal():
 
 def Repuestos():
     rep=Repuesto()
+    limpiar_pantalla()
     while True:
-        limpiar_pantalla()
-        limpiar_pantalla()
         print ("----REPUESTOS----")
         linea()
         print ("1- Listar los repuestos")
@@ -62,20 +61,30 @@ def Repuestos():
             rep.listar_repuestos()
             pausa()
         elif opcion==2:
+            limpiar_pantalla()
             rep.agregar_repuestos()
+            pausa()
         elif opcion==3:
+            limpiar_pantalla()
             rep.eliminar_repuestos()
+            pausa()
         elif opcion==4:
+            limpiar_pantalla()
             rep.modificar_repuesto()
+            pausa()
         elif opcion==5:
+            limpiar_pantalla()
             Marcas()
+            pausa()
         elif opcion==6:
+            limpiar_pantalla()
             Categorias()
+            pausa()
         elif opcion==7:
                 break
         else:
             print("Opcion invalida...")
-            pausa()
+        pausa()
 
 def Marcas():
     marca= Marca()
@@ -142,9 +151,10 @@ def Proveedores():
         linea()
         print ("1- Listar un proveedor")
         print ("2- Agregar un proveedor")
-        print ("3- Realizar un pedido")
-        print ("4- Modificar un proveedor")
-        print ("5- Salir")
+        print ("3- Eliminar Proveedor")
+        print ("4- Realizar un pedido")
+        print ("5- Modificar un proveedor")
+        print ("6- Salir")
         print()
         opcion=int(input("Elija una opcion: "))
         linea()
@@ -153,10 +163,12 @@ def Proveedores():
         elif opcion==2:
             prov.agregar_proveedor()
         elif opcion==3:
-            Pedidos()
+            prov.eliminar_proveedor()
         elif opcion==4:
-            prov.modificar_proveedores()
+            Pedidos()
         elif opcion==5:
+            prov.modificar_proveedores()
+        elif opcion ==6:
             break
         else:
             print("Opción Invalida...")
@@ -197,14 +209,22 @@ def estadisticas():
             opcion = int(input("Elegí una opción: "))
 
             if opcion == 1:
+                limpiar_pantalla()
                 est.proveedor_con_mas_pedidos()
+                pausa()
             elif opcion == 2:
+                limpiar_pantalla()
                 est.marcas_mas_pedidas()
+                pausa()
             elif opcion == 3:
+                limpiar_pantalla()
                 est.proveedores_por_estado()
+                pausa()
             elif opcion == 4:
+                limpiar_pantalla()
                 est.cerrar_conexion()
                 break
+                
             else:
                 print("Opción inválida.")
                 pausa()

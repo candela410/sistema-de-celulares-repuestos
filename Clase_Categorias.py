@@ -24,7 +24,7 @@ class Categoria():
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
-                cursor.execute("""insert into categorias (nombre) values(?)""",(nombre,))
+                cursor.execute("""insert into Categorias (nombre) values(?)""",(nombre,))
                 conexion.commit()
                 print()
                 print (f"La categoria {nombre} se agregó exitosamente...")
@@ -48,13 +48,14 @@ class Categoria():
         print("----ELIMINAR CATEGORIA----")
         linea()
         while True:
+            conexion=conectar()
+            cursor=conexion.cursor()
             nombre=input("Ingrese el nombre de la categoria que desee eliminar:  ").strip().lower()
             cursor.execute("select id_categoria from Categorias where nombre=?", (nombre,))
-            id=cursor.fetchonet()
+            id1=cursor.fetchone()
+            id=id1[0]
             try:
-                conexion=conectar()
-                cursor=conexion.cursor()
-                cursor.execute(""" delete from proveedores where id_categoria= ?""", (id,))
+                cursor.execute(""" delete from Categorias where id_categoria= ?""", (id,))
                 conexion.commit()
                 print()
                 print(f"La categoria {id} fué eliminada correctamente...")
@@ -71,18 +72,19 @@ class Categoria():
 
 
     def modificar_categoria(self):
+        limpiar_pantalla()
         while True:
-            limpiar_pantalla()
             print("----MODIFICAR CATEGORIA----")
             linea()
-            nombre=input("Ingrese el nombre de la categoria que desea modficar").strip().lower()
+            conexion=conectar()
+            cursor=conexion.cursor()
+            nombre=input("Ingrese el nombre de la categoria que desea modficar:  ").strip().lower()
             cursor.execute("select id_categoria from Categorias where nombre=?", (nombre,))
-            id=cursor.fetchone()
-            nuevo=("Ingrese el su nuevo nombre")
+            id1=cursor.fetchone()
+            id=id1[0]
+            nuevo=input("Ingrese el nuevo nombre:   ")
             try:
-                conexion=conectar()
-                cursor=conexion.cursor()
-                cursor.execute(""" update categorias set nombre= ? where id_categoria= ? """, (nuevo, id))
+                cursor.execute(""" update Categorias set nombre= ? where id_categoria= ? """, (nuevo, id))
                 conexion.commit()
                 print(f"La categoria {id} fué modificada correctamente ")
             except Exception as e:
@@ -92,7 +94,7 @@ class Categoria():
             linea()
             continuar=int(input("Si desea modificar otra categoria ingrese 1 sino 0:   "))
             linea()
-            if continuar != 0:
+            if continuar != 1:
                 break
             pausa()
 

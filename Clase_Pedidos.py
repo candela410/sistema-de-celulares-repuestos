@@ -80,7 +80,7 @@ class Pedido():
             else:
                 for p in pedidos:
                     print()
-                    print(f"ID: {p[0]} | Fecha Pedido: {p[1]} | Fecha Entrega: {p[2]} | Total: ${p[3]} | ID Proveedor: {p[4]}")
+                    print(f"ID: {p[0]} | Fecha Pedido: {p[1]} | Fecha Entrega: {p[2]} | Total: ${p[3]} | ID Proveedor: {p[4]} - Estado: {p[5]}")
                     linea()
                     det=Detalle_pedido()
                     det.listar_detalles(p[0])

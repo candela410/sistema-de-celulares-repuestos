@@ -83,7 +83,7 @@ class Estadisticas1:
 
         if df.empty or df['Cantidad_Total'].sum() == 0:
             print("\n[i] No hay ítems de pedidos registrados aún. Cargá un pedido para ver las marcas más pedidas.")
-            self.pausa()
+            pausa()
             return
 
         plt.style.use('default')
@@ -119,7 +119,7 @@ class Estadisticas1:
         
         if df.empty:
             print("\n[i] No hay proveedores cargados aún. Agregá alguno para ver el gráfico de estados.")
-            self.pausa()
+            pausa()
             return
         
         colores = ["#740202ff", "#000e51ff"]  

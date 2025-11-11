@@ -52,9 +52,12 @@ class Proveedor():
             linea()
             print("----ELIMINAR UN PROVEEDOR----")
             linea()
+            conexion=conectar()
+            cursor=conexion.cursor()
             proveedor=input("Ingrese el nombre del proveedor que desea Eliminar: ").strip().lower()
             cursor.execute("select id_proveedor from Proveedores where nombre= ?",(proveedor,))
-            id=cursor.fetchone()
+            id1=cursor.fetchone()
+            id=id1[0]
        
             try:
                 conexion=conectar()

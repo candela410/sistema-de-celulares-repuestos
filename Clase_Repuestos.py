@@ -74,11 +74,12 @@ class Repuesto():
             print("----ELIMINAR REPUESTO----")
             linea()
             try:
-                nombre=input("Ingresar el nombre del repuesto que desea eliminar:  ").strip().lower()
-                cursor.execute("select id_repuesto from Repuestos where nombre= ?",(nombre,))
-                id=cursor.fetchone()
                 conexion=conectar()
                 cursor=conexion.cursor()
+                nombre=input("Ingresar el nombre del repuesto que desea eliminar:  ").strip().lower()
+                cursor.execute("select id_repuesto from Repuestos where nombre= ?",(nombre,))
+                id1=cursor.fetchone()
+                id=id1[0]
                 cursor.execute(""" delete from Repuestos where id_repuesto = ?""", (id,))
                 conexion.commit()
                 linea()
@@ -143,8 +144,8 @@ class Repuesto():
             
         
     def listar_repuestos(self):
-        limpiar_pantalla()
         try:
+            limpiar_pantalla()
             linea()
             print("----LISTA DE REPUESTOS----")
             linea()

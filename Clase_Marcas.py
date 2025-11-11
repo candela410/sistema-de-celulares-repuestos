@@ -44,13 +44,14 @@ class Marca():
         limpiar_pantalla()
         print("----ELIMINAR MARCA----")
         while True:
+            conexion=conectar()
+            cursor=conexion.cursor()
             nombre=input("Ingresar el nombre de la marca que desea eliminar:  ").strip().lower()
             cursor.execute("select id_marca from Marcas where nombre= ?",(nombre,))
-            id=cursor.fetchone()
+            id1=cursor.fetchone()
+            id=id1[0]
             try:
-                conexion=conectar()
-                cursor=conexion.cursor()
-                cursor.execute("""delete from categorias where id_categoria= ?""", (id,))
+                cursor.execute("delete from Marcas where id_marca= ?", (id,))
                 conexion.commit()
                 print()
                 print("La marca se eliminó correctamente")
@@ -71,13 +72,14 @@ class Marca():
         print("----MODIFICAR MARCA----")
         linea()
         while True:
-            nombre=input("Ingresar el nombre de a marca que desea modificar:  ").strip().lower()
-            cursor.execute("select id_marca from Marcas where nombre=?", (nombre,))
-            id=cursor.fetchone()
-            nuevo=input("Ingresar su nuevo nombre:  ").strip().lower()
             try:
                 conexion=conectar()
                 cursor=conexion.cursor()
+                nombre=input("Ingresar el nombre de a marca que desea modificar:  ").strip().lower()
+                cursor.execute("select id_marca from Marcas where nombre=?", (nombre,))
+                id1=cursor.fetchone()
+                id=id1[0]
+                nuevo=input("Ingresar su nuevo nombre:  ").strip().lower()
                 cursor.execute(""" update marcas set nombre= ? where id_marca= ?""",(nuevo, id))
                 conexion.commit()
                 print("Se modificó correctamente....")
