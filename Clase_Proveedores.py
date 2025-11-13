@@ -26,7 +26,7 @@ class Proveedor():
                 conexion=conectar()
                 cursor=conexion.cursor()
                 cursor.execute("""
-                    insert into proveedores (nombre,telefono,direccion,estado) values (?,?,?,"Activo")""",(nombre,telefono, direccion))
+                    insert into proveedores (nombre,telefono,direccion,estado) values (?,?,?,?)""",(nombre,telefono, direccion, "Activo"))
                 print()
                 print(f"El proveedor {nombre} fué agregado correctamente :)")
                 linea()

@@ -57,34 +57,34 @@ def Repuestos():
         opcion=int(input("Elegir una opción:  "))
         linea()
         if opcion==1:
-            limpiar_pantalla()
+           
             rep.listar_repuestos()
-            pausa()
+         
         elif opcion==2:
-            limpiar_pantalla()
+           
             rep.agregar_repuestos()
-            pausa()
+            
         elif opcion==3:
-            limpiar_pantalla()
+        
             rep.eliminar_repuestos()
-            pausa()
+          
         elif opcion==4:
-            limpiar_pantalla()
+          
             rep.modificar_repuesto()
-            pausa()
+           
         elif opcion==5:
-            limpiar_pantalla()
+          
             Marcas()
-            pausa()
+       
         elif opcion==6:
-            limpiar_pantalla()
+          
             Categorias()
-            pausa()
+       
         elif opcion==7:
                 break
         else:
             print("Opcion invalida...")
-        pausa()
+            pausa()
 
 def Marcas():
     marca= Marca()
@@ -209,19 +209,19 @@ def estadisticas():
             opcion = int(input("Elegí una opción: "))
 
             if opcion == 1:
-                limpiar_pantalla()
+        
                 est.proveedor_con_mas_pedidos()
-                pausa()
+             
             elif opcion == 2:
-                limpiar_pantalla()
+             
                 est.marcas_mas_pedidas()
-                pausa()
+           
             elif opcion == 3:
-                limpiar_pantalla()
+               
                 est.proveedores_por_estado()
-                pausa()
+            
             elif opcion == 4:
-                limpiar_pantalla()
+           
                 est.cerrar_conexion()
                 break
                 

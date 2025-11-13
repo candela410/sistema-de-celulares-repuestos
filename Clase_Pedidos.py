@@ -2,6 +2,8 @@ from Clase_Detalle import Detalle_pedido
 from Clase_Proveedores import Proveedor 
 from BD import conectar, linea, tablas, limpiar_pantalla, pausa 
 from datetime import datetime
+import urllib. parse
+import webbrowser
 
 class Pedido():
     def __init__(self, id_pedidos=None,fecha_pedido=None, fecha_entrega=None, total=0,id_proveedor=None):
@@ -49,6 +51,21 @@ class Pedido():
                     det.agregar_detalle(id_pedido)
                     print()
                     print("Pedido realizado correctamente....")
+                    # cursor.execute ("select telefono from Proveedores where id_proveedor= ?",(id_prov,))
+                    # resultado=cursor.fetchone()
+                    # if resultado:
+                    #     telefono=str(resultado[0])
+                    #     cursor.execute ("select r.nombre, d.cantidad from Detalle_pedidos d inner join Repuestos r on d.id_repuesto=r.id_repuesto where d.id_pedido=?",(id_pedido,))
+                    #     productos=cursor.fetchall()
+                    #     mensaje=(f"Hola, quisiera realizar un pedido\n\n")
+                    #     for producto, cantidad in productos:
+                    #         mensaje += (f"{producto}  x{cantidad} \n")
+                    #     mensaje += ("Gracias por su atención")
+                    #     mensaje_codificado=urllib.parse.quote(mensaje)
+                    #     url=(f"https://wa.me/{telefono}?text={mensaje_codificado}")
+                    #     webbrowser.open(url)
+                    # else: 
+                    #     print("Proveedor no encontrado")
             except Exception as e:
                 print("Error al realizar el pedido", e)
             finally:
